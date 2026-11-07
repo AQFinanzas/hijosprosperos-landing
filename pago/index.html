@@ -136,7 +136,7 @@ body.s3 #pais{display:none}
   <div class="ptxt" id="ptxt">Paso 1 de 2 · Elige cómo vas a pagar</div>
   <section id="metodos">
     <div class="pais grande" id="pais"><span>¿Desde dónde pagas?</span><button type="button" data-p="ve">🇻🇪 Venezuela</button><button type="button" data-p="otro">🌎 Otro país</button></div>
-    <label class="up" id="up"><input type="checkbox" id="upChk"><span><b class="t">Súmale la parte de inversión 📈</b><span class="d">La pieza 7 del rompecabezas: tu hijo aprende cómo funciona la bolsa y hace sus primeras operaciones de práctica, con Bruno y según su edad. Acceso de por vida para 1 hijo.</span><span class="pr">+ US$47</span></span></label>
+    <label class="up" id="up"><input type="checkbox" id="upChk"><span><b class="t">Súmale la parte de inversión 📈</b><span class="d">Tu hijo aprende cómo funciona la bolsa y hace sus primeras operaciones de práctica, con Bruno y según su edad. Acceso de por vida para 1 hijo.</span><span class="pr">+ US$47</span></span></label>
     <div class="tot" id="tot"></div>
     <div id="methods"></div>
     <button type="button" class="volver" id="volver" data-ev="volver_metodos">← Elegir otro método</button>
@@ -169,7 +169,8 @@ body.s3 #pais{display:none}
     <h2>Lo que recibes</h2>
     <ul class="incl">
       <li>App para niños (8 a 12 años) y app para jóvenes (13 a 17 años)</li>
-      <li>6 piezas y 26 lecciones con video animado</li>
+      <li>Lecciones con video animado</li>
+      <li>Se descarga en celular, tablet o computadora</li>
       <li>Juegos, retos y prácticas en cada lección</li>
       <li>Una misión en familia al final de cada pieza</li>
       <li>Premios, logros y certificado al terminar</li>
@@ -252,7 +253,7 @@ function render(){
 var abierto = (box.querySelector('.method.abierto')||{getAttribute:function(){return null}}).getAttribute('data-id');
 box.innerHTML=''; var selv=sel.value;
 sel.innerHTML = '<option value="">Elige una opción</option>';
-$('#tot').innerHTML = INV ? 'Total: <b>US$'+TOT()+'</b> · Educación financiera US$'+BASE+' + Inversión US$'+CONFIG.UPSELL_USD : 'Total: <b>US$'+BASE+'</b> · Educación financiera (6 piezas)';
+$('#tot').innerHTML = INV ? 'Total: <b>US$'+TOT()+'</b> · Educación financiera US$'+BASE+' + Inversión US$'+CONFIG.UPSELL_USD : 'Total: <b>US$'+BASE+'</b> · Educación financiera';
 $('#precioTop').textContent='$'+TOT();
 METODOS.forEach(function(m){
   var d = document.createElement('div');
