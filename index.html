@@ -56,6 +56,7 @@ h1{margin:0 auto;max-width:900px;font-weight:900;font-size:clamp(28px,5vw,52px);
 h1 span,h2 span{color:#ED480F}
 .sub{margin:16px auto 26px;max-width:680px;font-size:clamp(16px,2.2vw,19px);line-height:1.55;font-weight:500;color:#4A4380}
 .video{position:relative;max-width:960px;margin:0 auto;aspect-ratio:16/9;border-radius:22px;overflow:hidden;background:#170B5B;box-shadow:0 24px 60px rgba(23,11,91,.25);border:5px solid #fff}
+.vbar{position:absolute;left:0;right:0;bottom:0;height:6px;background:rgba(255,255,255,.25);pointer-events:none;z-index:3}.vbar i{display:block;height:100%;width:0;background:#ED480F;border-radius:0 3px 3px 0;transition:width .25s linear}
 .video video{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .sonido{position:absolute;top:10px;right:10px;border:0;border-radius:999px;background:rgba(237,72,15,.96);color:#fff;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 16px 9px 12px;box-shadow:0 6px 18px rgba(23,11,91,.35);animation:pulso 1.6s ease-in-out infinite;transform-origin:top right}
 .sonido svg{width:24px;height:24px;flex:none}
@@ -119,6 +120,7 @@ footer img{height:40px}
         <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>
         <b>Toca para escuchar</b><span>con sonido</span>
       </button>
+      <div class="vbar" aria-hidden="true"><i id="vbar"></i></div>
     </div>
     <div class="oferta on" id="oferta">
       <p style="margin:0;font-weight:900;font-size:clamp(34px,6vw,48px);line-height:1">US$37 <span style="font-size:16px;font-weight:700;color:#4A4380">pago único</span></p>
@@ -347,6 +349,17 @@ footer img{height:40px}
     });
   });
   document.getElementById('aq').addEventListener('click', function(){ ev('ClicAQFinanzas'); });
+})();
+</script>
+<script>
+// 7-nov-2026: barra de avance que no se puede tocar. Corre rápido al inicio (30 % del video = 60 % de la barra) y luego avanza lento hasta el final.
+(function(){
+  var b = document.getElementById('vbar'); if (!b) return;
+  function f(p){ return p < .3 ? p / .3 * 60 : 60 + (p - .3) / .7 * 40; }
+  setInterval(function(){
+    var v = document.getElementById('vsl'); if (!v || !v.duration) return;
+    var p = Math.min(1, v.currentTime / v.duration); b.style.width = f(p).toFixed(2) + '%';
+  }, 250);
 })();
 </script>
 </body>
