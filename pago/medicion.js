@@ -21,7 +21,7 @@
   ev('VioPago_' + V);
 
   /* Clarity: mapas de calor y grabaciones, etiquetados por variante */
-  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z3rvf294da");
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","za51i87a96");
   clarity('set', 'landing', 'pagohp'); clarity('set', 'variante_pago', V);
   clarity('set', 'precio', String(PAGO.precio)); clarity('set', 'fuente', PAGO.src || q.get('utm_source') || 'directo');
   if (q.get('utm_content')) clarity('set', 'anuncio', q.get('utm_content'));
