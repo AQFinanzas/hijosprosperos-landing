@@ -94,6 +94,15 @@ body.s3 #pais{display:none}
 .volver{display:block;margin:4px auto 0;background:none;border:0;color:var(--blue);font:inherit;font-weight:700;font-size:15px;cursor:pointer;padding:8px}
 .oc{display:none}
 .method .tag{display:none}
+.up{border:2px dashed #ED480F;background:#FFF4EE;border-radius:16px;padding:16px;margin:0 0 16px;cursor:pointer;display:flex;gap:12px;align-items:flex-start}
+.up.on{border-style:solid;background:#FFE8DC}
+.up input{width:24px;height:24px;margin:2px 0 0;accent-color:#ED480F;flex:none}
+.up b.t{display:block;color:#170B5B;font-size:17px;margin-bottom:4px}
+.up .d{font-size:14px;color:#3c3a55;line-height:1.45}
+.up .pr{display:table;margin-top:8px;background:#ED480F;color:#fff;border-radius:999px;padding:4px 12px;font-weight:700;font-size:14px}
+.tot{background:#170B5B;color:#fff;border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:15px}
+.tot b{font-size:18px}
+.paso2{font-size:13px;color:#3c3a55;margin:12px 0 6px;font-weight:700}
 </style>
 </head>
 <body>
@@ -126,6 +135,8 @@ body.s3 #pais{display:none}
   <div class="ptxt" id="ptxt">Paso 1 de 2 · Elige cómo vas a pagar</div>
   <section id="metodos">
     <div class="pais grande" id="pais"><span>¿Desde dónde pagas?</span><button type="button" data-p="ve">🇻🇪 Venezuela</button><button type="button" data-p="otro">🌎 Otro país</button></div>
+    <label class="up" id="up"><input type="checkbox" id="upChk"><span><b class="t">Súmale la parte de inversión 📈</b><span class="d">La pieza 7 del rompecabezas: tu hijo aprende cómo funciona la bolsa y hace sus primeras operaciones de práctica, con Bruno y según su edad. Acceso de por vida para 1 hijo.</span><span class="pr">+ US$47</span></span></label>
+    <div class="tot" id="tot"></div>
     <div id="methods"></div>
     <button type="button" class="volver" id="volver" data-ev="volver_metodos">← Elegir otro método</button>
   </section>
@@ -173,6 +184,8 @@ body.s3 #pais{display:none}
 /* ===================== CONFIGURACIÓN (editar aquí) ===================== */
 var CONFIG = {
   PRECIO_USD: 37,
+  UPSELL_USD: 47,                      // parte de inversión (pieza 7), 1 hijo
+  UPSELL_LINK: 'https://pay.hotmart.com/M108382595C?off=3r5p4rrg',
   TASA_BS: 1000,                       // tasa del día en Bs por US$
   CIERRE: '',                          // opcional: fecha de cierre (ej. '2026-10-25T21:00:00-05:00'); vacío = siempre abierta
   WHATSAPP: '573105104847',            // soporte (recibe las capturas)
@@ -205,8 +218,11 @@ var COLORES = {
 var $ = function(s){return document.querySelector(s)};
 if(P197){ $('#precioTop').textContent='$197'; }
 function fmtBs(n){return 'Bs. '+n.toLocaleString('es-VE',{minimumFractionDigits:2,maximumFractionDigits:2})}
-var BS = CONFIG.PRECIO_USD*CONFIG.TASA_BS;
-var PAYPAL = Math.round((CONFIG.PRECIO_USD*(1+CONFIG.PAYPAL_COMISION)+CONFIG.PAYPAL_FIJO)*100)/100;
+var BASE = CONFIG.PRECIO_USD, INV = false;
+function TOT(){return BASE+(INV?CONFIG.UPSELL_USD:0)}
+var BS, PAYPAL;
+function calc(){ CONFIG.PRECIO_USD=TOT(); BS=CONFIG.PRECIO_USD*CONFIG.TASA_BS; PAYPAL=Math.round((CONFIG.PRECIO_USD*(1+CONFIG.PAYPAL_COMISION)+CONFIG.PAYPAL_FIJO)*100)/100; }
+calc();
 $('#bsLine').style.display='none';
 var src = (new URLSearchParams(location.search).get('src')||'').replace(/[^a-z0-9_-]/gi,'').slice(0,30);
 
@@ -231,16 +247,25 @@ function montoTexto(m){
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 
 var box = $('#methods'), sel = $('#f-metodo');
+function render(){
+var abierto = (box.querySelector('.method.abierto')||{getAttribute:function(){return null}}).getAttribute('data-id');
+box.innerHTML=''; var selv=sel.value;
 sel.innerHTML = '<option value="">Elige una opción</option>';
+$('#tot').innerHTML = INV ? 'Total: <b>US$'+TOT()+'</b> · Educación financiera US$'+BASE+' + Inversión US$'+CONFIG.UPSELL_USD : 'Total: <b>US$'+BASE+'</b> · Educación financiera (6 piezas)';
+$('#precioTop').textContent='$'+TOT();
 METODOS.forEach(function(m){
   var d = document.createElement('div');
-  d.className = 'method'+(m.id==='hotmart'?' abierto':''); d.setAttribute('data-donde', m.donde); d.setAttribute('data-id', m.id);
+  d.className = 'method'; d.setAttribute('data-donde', m.donde); d.setAttribute('data-id', m.id);
   var col = COLORES[m.id]||['#01005A','#fff','💳'];
   d.style.setProperty('--c',col[0]); d.style.setProperty('--t',col[1]);
   var h = '<div class="mhead"><span class="mname"><span>'+col[2]+'</span>'+esc(m.nombre)+'</span><span><span class="tag">'+(m.donde==='ve'?'Venezuela':'Todos los países')+'</span><span class="flecha">▼</span></span></div><div class="mbody">';
   if(m.id==='hotmart'){
     h += '<div class="amount">Monto: <b>$'+CONFIG.PRECIO_USD+' USD</b></div>';
-    h += '<a class="btn btn-o js-hot" href="'+esc(m.link+(src?(m.link.indexOf('?')>=0?'&':'?')+'sck='+src:''))+'" target="_blank" rel="noopener">Pagar con tarjeta</a>';
+    var sk = function(l){return l+(src?(l.indexOf('?')>=0?'&':'?')+'sck='+src:'')};
+    if(INV) h += '<div class="paso2">1) Educación financiera · US$'+BASE+'</div>';
+    h += '<a class="btn btn-o js-hot" href="'+esc(sk(m.link))+'" target="_blank" rel="noopener">Pagar con tarjeta'+(INV?' · US$'+BASE:'')+'</a>';
+    if(INV){ h += '<div class="paso2">2) Parte de inversión · US$'+CONFIG.UPSELL_USD+'</div>';
+      h += '<a class="btn btn-o js-hot js-up" href="'+esc(sk(CONFIG.UPSELL_LINK))+'" target="_blank" rel="noopener">Pagar la inversión · US$'+CONFIG.UPSELL_USD+'</a>'; }
     h += '<div class="note">Pago seguro por Hotmart. El acceso llega solo a tu correo; no necesitas llenar el formulario.</div>';
   } else {
     h += '<div class="row"><div><div class="k">Monto exacto</div><div class="v">'+esc(montoTexto(m))+'</div></div><button class="copy" data-c="'+esc(montoTexto(m).replace(/^Bs\. /,'').replace(/ USDT| USD/,'').replace('$',''))+'" data-m="'+esc(m.nombre)+'">Copiar</button></div>';
@@ -255,7 +280,12 @@ METODOS.forEach(function(m){
   }
   h += '</div>';
   d.innerHTML = h; box.appendChild(d);
+  if(m.id===abierto) d.classList.add('abierto');
 });
+if(selv) sel.value=selv;
+}
+render();
+$('#upChk').addEventListener('change',function(){ INV=this.checked; $('#up').classList.toggle('on',INV); calc(); render(); ev(INV?'AgregoInversion':'QuitoInversion',{value:TOT(),currency:'USD'}); });
 
 box.addEventListener('click', function(e){
   var hd = e.target.closest('.mhead');
@@ -317,10 +347,11 @@ $('#form').addEventListener('submit', function(e){
   $('#err').style.display='none';
   var met = METODOS.filter(function(x){return x.nombre===m})[0]||{};
   var pais = met.donde==='ve' || /^(\+?58|0?4\d{2})/.test(w.replace(/\s/g,'')) ? 'Venezuela' : 'Otro país';
-  var data = {producto:'Hijos Prósperos', nombre:n, correo:c, whatsapp:w, referencia:r, plan:'Hijos Prósperos', pais:pais, metodo:m,
+  var plan = INV ? 'Hijos Prósperos + Inversión' : 'Hijos Prósperos';
+  var data = {producto:plan, nombre:n, correo:c, whatsapp:w, referencia:r, plan:plan, pais:pais, metodo:m,
     monto:montoTexto(met), tasa: met.moneda==='bs'?String(CONFIG.TASA_BS):'', fuente: 'pago-hp'+(src?'-'+src:'')};
   var btn=$('#send'); btn.disabled=true; btn.textContent='Enviando…';
-  var msg = 'Hola, soy '+n+'. Ya pagué la Hijos Prósperos con '+m+' ('+montoTexto(met)+').'+(r?' Referencia: '+r+'.':'')+' Mi correo es '+c+'. Te envío la captura.';
+  var msg = 'Hola, soy '+n+'. Ya pagué '+plan+' con '+m+' ('+montoTexto(met)+').'+(r?' Referencia: '+r+'.':'')+' Mi correo es '+c+'. Te envío la captura.';
   $('#okWa').href = wa(msg);
   ev('PagoReportado',{value:CONFIG.PRECIO_USD,currency:'USD',content_name:m})
   fetch(CONFIG.SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data),keepalive:true})
