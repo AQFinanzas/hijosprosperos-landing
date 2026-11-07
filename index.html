@@ -257,13 +257,17 @@ footer img{height:40px}
   // y muestra «Seguir viendo»; al tocarlo, sigue donde iba y el de las apps se pausa.
   window.HP_pausarVSL = function(){
     if (!conSonido) { try { v.pause(); } catch(e){} return; }
-    window.HP_VSL_PAUSA = true; try { v.pause(); } catch(e){}
+    window.HP_VSL_PAUSA = true; try { v.pause(); } catch(e){} v.removeAttribute('controls'); v.style.pointerEvents = 'none';
     btn.querySelector('b').textContent = 'Seguir viendo'; btn.style.display = 'flex';
   };
   function reanudar(){
-    window.HP_VSL_PAUSA = false; btn.style.display = 'none';
+    // Sigue desde donde quedó, siempre sin barra ni controles
+    btn.style.display = 'none'; v.removeAttribute('controls'); v.style.pointerEvents = 'none';
     try { if (window.HP_pausarApps) window.HP_pausarApps(); } catch(e){}
-    var p = v.play(); if (p && p.catch) p.catch(respaldo);
+    var p = v.play();
+    var ok = function(){ window.HP_VSL_PAUSA = false; };
+    var fallo = function(){ window.HP_VSL_PAUSA = true; btn.querySelector('b').textContent = 'Seguir viendo'; btn.style.display = 'flex'; };
+    if (p && p.then) p.then(ok).catch(fallo); else ok();
   }
   btn.addEventListener('click', function(e){ e.stopPropagation(); if (window.HP_VSL_PAUSA) reanudar(); else { try { if (window.HP_pausarApps) window.HP_pausarApps(); } catch(e){} activar(); } });
   caja.addEventListener('click', function(){ if (window.HP_VSL_PAUSA) reanudar(); else if (!conSonido || v.muted) { try { if (window.HP_pausarApps) window.HP_pausarApps(); } catch(e){} activar(); } });
