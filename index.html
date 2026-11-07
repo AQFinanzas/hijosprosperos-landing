@@ -238,7 +238,7 @@ footer img{height:40px}
   // Activar el sonido. En iPhone (sobre todo dentro de Instagram/Facebook) un video que arrancó en silencio
   // no deja quitarle el silencio: al tocar se cambia por un video nuevo, sin silencio, que arranca con el toque.
   var vistoVC = false, caja = v.parentNode;
-  function respaldo(){ v.muted = false; v.setAttribute('controls',''); v.style.pointerEvents = 'auto'; btn.style.display = 'none'; ev('VSL_respaldo_controles'); }
+  function respaldo(){ /* 7-nov-2026: nunca mostrar los controles del celular (dejan adelantar). Se pausa y se pide un toque para seguir con sonido. */ try { v.pause(); } catch(e){} v.muted = false; v.removeAttribute('controls'); v.style.pointerEvents = 'none'; window.HP_VSL_PAUSA = true; btn.querySelector('b').textContent = 'Toca para seguir'; btn.style.display = 'flex'; ev('VSL_respaldo_toque'); }
   function enlazar(el){
     // Sin pausa: si algo lo detiene, sigue (solo con sonido y sin controles visibles)
     el.addEventListener('pause', function(){ if (conSonido && !window.HP_VSL_PAUSA && !el.ended && !el.hasAttribute('controls')) { setTimeout(function(){ var p = el.play(); if (p && p.catch) p.catch(respaldo); }, 50); } });
@@ -312,7 +312,7 @@ footer img{height:40px}
       try { av.pause(); } catch(e) {}
       av.parentNode.replaceChild(n, av); n.addEventListener('timeupdate', function(){ if (!n.duration) return; var pct = n.currentTime / n.duration * 100; [50,95].forEach(function(x){ if (pct >= x && !h['s' + x]) { h['s' + x] = 1; ev('APPS_' + x); } }); });
       av = n; son.style.display = 'none';
-      var p = n.play(); if (p && p.catch) p.catch(function(){ n.setAttribute('controls', ''); n.style.pointerEvents = 'auto'; });
+      var p = n.play(); if (p && p.catch) p.catch(function(){});
       ev('APPS_sonido');
     }
     window.HP_pausarApps = function(){ try { av.pause(); } catch(e) {} };
