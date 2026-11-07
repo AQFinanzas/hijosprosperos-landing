@@ -285,7 +285,7 @@ METODOS.forEach(function(m){
 if(selv) sel.value=selv;
 }
 render();
-$('#upChk').addEventListener('change',function(){ INV=this.checked; $('#up').classList.toggle('on',INV); calc(); render(); ev(INV?'AgregoInversion':'QuitoInversion',{value:TOT(),currency:'USD'}); });
+$('#upChk').addEventListener('change',function(){ INV=this.checked; $('#up').classList.toggle('on',INV); calc(); render(); ev(INV?'AgregoInversion':'QuitoInversion',{value:TOT(),currency:'USD'}); if(INV) ev('AddToCart',{value:CONFIG.UPSELL_USD,currency:'USD',content_name:'Hijos Prosperos · inversion'},true); });
 
 box.addEventListener('click', function(e){
   var hd = e.target.closest('.mhead');
@@ -301,7 +301,7 @@ box.addEventListener('click', function(e){
     addPayment(c.getAttribute('data-m'));
   }
   if(p){ ev('ClicYaPague',{metodo:p.getAttribute('data-m')}); sel.value = p.getAttribute('data-m'); addPayment(p.getAttribute('data-m')); $('#yapague').scrollIntoView({behavior:'smooth'}); setTimeout(function(){$('#f-nombre').focus()},500); }
-  if(hm){ addPayment('Tarjeta (Hotmart)'); ev('ClicHotmart'); }
+  if(hm){ var esUp=hm.classList.contains('js-up'); addPayment('Tarjeta (Hotmart)'); ev(esUp?'ClicHotmartInversion':'ClicHotmart',{value:esUp?CONFIG.UPSELL_USD:BASE,currency:'USD',inversion:INV?'si':'no'}); }
 });
 /* Filtro por país: Venezuela ve todos; otro país oculta los métodos solo de Venezuela */
 $('#pais').addEventListener('click', function(e){
@@ -353,7 +353,7 @@ $('#form').addEventListener('submit', function(e){
   var btn=$('#send'); btn.disabled=true; btn.textContent='Enviando…';
   var msg = 'Hola, soy '+n+'. Ya pagué '+plan+' con '+m+' ('+montoTexto(met)+').'+(r?' Referencia: '+r+'.':'')+' Mi correo es '+c+'. Te envío la captura.';
   $('#okWa').href = wa(msg);
-  ev('PagoReportado',{value:CONFIG.PRECIO_USD,currency:'USD',content_name:m})
+  ev('PagoReportado',{value:CONFIG.PRECIO_USD,currency:'USD',content_name:m,inversion:INV?'si':'no'}); try{clarity('set','inversion',INV?'si':'no')}catch(x){}
   fetch(CONFIG.SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data),keepalive:true})
     .catch(function(){}).then(function(){
       $('#form').style.display='none'; $('#ok').style.display='block'; $('#ok').scrollIntoView({behavior:'smooth'});
