@@ -352,10 +352,10 @@ footer img{height:40px}
 })();
 </script>
 <script>
-// 7-nov-2026: barra de avance que no se puede tocar. Corre rápido al inicio (30 % del video = 60 % de la barra) y luego avanza lento hasta el final.
+// 7-nov-2026: barra de avance que no se puede tocar. Corre rápido al inicio (30 % del video = 70 % de la barra) y luego avanza lento hasta el final.
 (function(){
   var b = document.getElementById('vbar'); if (!b) return;
-  function f(p){ return p < .3 ? p / .3 * 60 : 60 + (p - .3) / .7 * 40; }
+  function f(p){ return p < .3 ? p / .3 * 70 : 70 + (p - .3) / .7 * 30; }
   setInterval(function(){
     var v = document.getElementById('vsl'); if (!v || !v.duration) return;
     var p = Math.min(1, v.currentTime / v.duration); b.style.width = f(p).toFixed(2) + '%';
