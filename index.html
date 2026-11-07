@@ -52,8 +52,10 @@ h1 span,h2 span{color:#ED480F}
 .sub{margin:16px auto 26px;max-width:680px;font-size:clamp(16px,2.2vw,19px);line-height:1.55;font-weight:500;color:#4A4380}
 .video{position:relative;max-width:960px;margin:0 auto;aspect-ratio:16/9;border-radius:22px;overflow:hidden;background:#170B5B;box-shadow:0 24px 60px rgba(23,11,91,.25);border:5px solid #fff}
 .video video{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
-.sonido{position:absolute;inset:0;margin:auto;width:min(330px,82%);height:140px;border:0;border-radius:22px;background:rgba(237,72,15,.95);color:#fff;font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;animation:pulso 1.6s ease-in-out infinite}
-.sonido b{font-size:clamp(16px,3vw,20px);font-weight:900}.sonido span{font-size:clamp(13px,2.4vw,15px);font-weight:700}
+.sonido{position:absolute;top:10px;right:10px;border:0;border-radius:999px;background:rgba(237,72,15,.96);color:#fff;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:8px;padding:9px 16px 9px 12px;box-shadow:0 6px 18px rgba(23,11,91,.35);animation:pulso 1.6s ease-in-out infinite;transform-origin:top right}
+.sonido svg{width:24px;height:24px;flex:none}
+.sonido b{font-size:clamp(13px,2.6vw,17px);font-weight:900;white-space:nowrap}.sonido span{display:none}
+@media (max-width:480px){.sonido{top:7px;right:7px;padding:7px 12px 7px 9px;gap:6px}.sonido svg{width:20px;height:20px}}
 @keyframes pulso{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 .cta{display:inline-flex;align-items:center;justify-content:center;background:#ED480F;color:#fff!important;text-decoration:none;font-weight:900;border-radius:999px;box-shadow:0 8px 0 #170B5B;font-size:clamp(18px,3vw,24px);padding:20px 40px;text-align:center}
 .cta:hover{transform:translateY(-2px)}
@@ -100,7 +102,7 @@ footer img{height:40px}
       <video id="vsl" src="vsl.mp4" poster="poster.jpg" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
       <button class="sonido" id="sonido" aria-label="Activar el sonido del video">
         <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>
-        <b>Tu video ya empezó</b><span>Toca aquí para escucharlo</span>
+        <b>Toca para escuchar</b><span>con sonido</span>
       </button>
     </div>
     <div class="oferta on" id="oferta">
