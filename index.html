@@ -67,6 +67,12 @@ h1 span,h2 span{color:#ED480F}
 .oferta{display:none;margin-top:34px;flex-direction:column;align-items:center;gap:12px}
 .oferta.on{display:flex}.oferta .cta{animation:pulso 1.6s ease-in-out infinite}
 .nota{font-size:15px;font-weight:600;color:#4A4380}
+.apps{padding:8px 0 56px;text-align:center}
+.apps h2{margin:0 0 6px}.apps p.s{margin:0 auto 22px;max-width:560px;font-size:17px;line-height:1.55;color:#4A4380;font-weight:500}
+.apps .cel{position:relative;width:min(360px,86vw);margin:0 auto;aspect-ratio:9/16;border-radius:28px;overflow:hidden;box-shadow:0 24px 60px rgba(23,11,91,.25);border:5px solid #fff;background:#170B5B;cursor:pointer}
+.apps .cel video{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.apps .son{position:absolute;top:10px;right:10px;border:0;border-radius:999px;background:rgba(237,72,15,.96);color:#fff;font:900 14px Montserrat,system-ui,sans-serif;display:flex;align-items:center;gap:6px;padding:8px 13px 8px 10px;box-shadow:0 6px 18px rgba(23,11,91,.35);animation:pulso 1.6s ease-in-out infinite;transform-origin:top right;cursor:pointer}
+.apps .son svg{width:20px;height:20px}
 section.az{background:#170B5B;color:#fff;padding:64px 0}
 h2{margin:0 0 12px;font-weight:900;font-size:clamp(26px,4vw,38px);line-height:1.15}
 .az h2{text-align:center}.az h2 span{color:#FF8A4C}
@@ -117,6 +123,18 @@ footer img{height:40px}
     </div>
   </section>
 </div>
+
+<!-- 7-nov-2026: video corto de las apps (niños y jóvenes) con la voz de Alejandro -->
+<section class="apps" id="apps">
+  <div class="wrap">
+    <h2>Así son las <span>apps de tus hijos</span></h2>
+    <p class="s">Una para niños de 8 a 12 años y otra para jóvenes de 13 a 17. Míralas por dentro en 40 segundos.</p>
+    <div class="cel" id="apps-cel">
+      <video id="apps-v" src="apps.mp4" poster="apps.jpg" muted playsinline webkit-playsinline preload="none" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
+      <button class="son" id="apps-son" aria-label="Activar el sonido del video de las apps"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Toca para escuchar</button>
+    </div>
+  </div>
+</section>
 
 <section class="az">
   <div class="wrap">
@@ -237,6 +255,33 @@ footer img{height:40px}
   btn.addEventListener('click', function(e){ e.stopPropagation(); activar(); });
   caja.addEventListener('click', function(){ if (!conSonido || v.muted) activar(); });
 
+
+  // Video de las apps: arranca en silencio cuando se ve; al tocar, vuelve a empezar con sonido.
+  (function(){
+    var av = document.getElementById('apps-v'), cel = document.getElementById('apps-cel'), son = document.getElementById('apps-son');
+    if (!av) return;
+    var visto = false, sonido = false, h = {};
+    try { new IntersectionObserver(function(es){ es.forEach(function(e){
+      if (e.isIntersecting) { if (!visto) { visto = true; ev('APPS_visto'); } var p = av.play(); if (p && p.catch) p.catch(function(){}); }
+      else if (!av.paused) av.pause();
+    }); }, { threshold: 0.5 }).observe(cel); } catch(e) {}
+    av.addEventListener('timeupdate', function(){ if (!av.duration) return; var pct = av.currentTime / av.duration * 100; [50,95].forEach(function(x){ if (pct >= x && !h[x]) { h[x] = 1; ev('APPS_' + x + (sonido ? '' : '_mudo')); } }); });
+    function conSonido(){
+      if (sonido && !av.muted) { if (av.paused) av.play(); else av.pause(); return; }
+      sonido = true;
+      var n = document.createElement('video');
+      n.id = 'apps-v'; n.setAttribute('playsinline', ''); n.setAttribute('webkit-playsinline', ''); n.playsInline = true;
+      n.setAttribute('disablepictureinpicture', ''); n.setAttribute('controlslist', 'nodownload nofullscreen noplaybackrate');
+      n.poster = av.poster; n.muted = false; n.volume = 1; n.src = av.currentSrc || av.src; n.style.cssText = av.style.cssText;
+      try { av.pause(); } catch(e) {}
+      av.parentNode.replaceChild(n, av); n.addEventListener('timeupdate', function(){ if (!n.duration) return; var pct = n.currentTime / n.duration * 100; [50,95].forEach(function(x){ if (pct >= x && !h['s' + x]) { h['s' + x] = 1; ev('APPS_' + x); } }); });
+      av = n; son.style.display = 'none';
+      var p = n.play(); if (p && p.catch) p.catch(function(){ n.setAttribute('controls', ''); n.style.pointerEvents = 'auto'; });
+      ev('APPS_sonido');
+    }
+    son.addEventListener('click', function(e){ e.stopPropagation(); conSonido(); });
+    cel.addEventListener('click', conSonido);
+  })();
   function esVenezuela(){
     var p = (q.get('pais') || '').toLowerCase(); if (p) return p === 've';
     if (/(^|[-_|])ve($|[-_|])|venezuela/i.test((q.get('utm_campaign')||'') + '|' + (q.get('utm_content')||''))) return true;
