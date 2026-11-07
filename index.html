@@ -201,8 +201,10 @@ footer img{height:40px}
     // Sin pausa: si algo lo detiene, sigue (solo con sonido y sin controles visibles)
     el.addEventListener('pause', function(){ if (conSonido && !el.ended && !el.hasAttribute('controls')) { setTimeout(function(){ var p = el.play(); if (p && p.catch) p.catch(respaldo); }, 50); } });
     el.addEventListener('timeupdate', function(){
-      if (!conSonido || !el.duration) return;
+      if (!el.duration) return;
       var pct = el.currentTime / el.duration * 100;
+      // 7-nov-2026: también se mide quien lo ve en silencio (leyendo los subtítulos), solo en Clarity
+      if (!conSonido) { [10,25,50,75,95].forEach(function(h){ if (pct >= h && !hitos['m' + h]) { hitos['m' + h] = 1; try { clarity('event', 'VSL_mudo_' + h); } catch(e){} } }); if (el.currentTime >= window.SEG_OFERTA) mostrarOferta('video'); return; }
       [25,50,75,95].forEach(function(h){ if (pct >= h && !hitos[h]) { hitos[h] = 1; ev('VSL_' + h); } });
       // Clarity: dónde se van (cada 10 % y cada 15 s); la etiqueta vsl_seg queda con el último tramo visto de cada visita
       var d = Math.floor(pct / 10) * 10; if (d > 0 && !hitos['c' + d]) { hitos['c' + d] = 1; try { clarity('event', 'VSL_c' + d); } catch(e){} }
