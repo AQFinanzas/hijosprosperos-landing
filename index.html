@@ -73,6 +73,7 @@ h1 span,h2 span{color:#ED480F}
 .apps .cel video{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .apps .son{position:absolute;top:10px;right:10px;border:0;border-radius:999px;background:rgba(237,72,15,.96);color:#fff;font:900 14px Montserrat,system-ui,sans-serif;display:flex;align-items:center;gap:6px;padding:8px 13px 8px 10px;box-shadow:0 6px 18px rgba(23,11,91,.35);animation:pulso 1.6s ease-in-out infinite;transform-origin:top right;cursor:pointer}
 .apps .son svg{width:20px;height:20px}
+@media (max-width:600px){.apps .cel{width:min(240px,62vw);border-radius:22px}.apps .son{top:7px;right:7px;font-size:12px;padding:6px 10px 6px 8px}.apps .son svg{width:16px;height:16px}}
 section.az{background:#170B5B;color:#fff;padding:64px 0}
 h2{margin:0 0 12px;font-weight:900;font-size:clamp(26px,4vw,38px);line-height:1.15}
 .az h2{text-align:center}.az h2 span{color:#FF8A4C}
@@ -222,7 +223,7 @@ footer img{height:40px}
   function respaldo(){ v.muted = false; v.setAttribute('controls',''); v.style.pointerEvents = 'auto'; btn.style.display = 'none'; ev('VSL_respaldo_controles'); }
   function enlazar(el){
     // Sin pausa: si algo lo detiene, sigue (solo con sonido y sin controles visibles)
-    el.addEventListener('pause', function(){ if (conSonido && !el.ended && !el.hasAttribute('controls')) { setTimeout(function(){ var p = el.play(); if (p && p.catch) p.catch(respaldo); }, 50); } });
+    el.addEventListener('pause', function(){ if (conSonido && !window.HP_VSL_PAUSA && !el.ended && !el.hasAttribute('controls')) { setTimeout(function(){ var p = el.play(); if (p && p.catch) p.catch(respaldo); }, 50); } });
     el.addEventListener('timeupdate', function(){
       if (!el.duration) return;
       var pct = el.currentTime / el.duration * 100;
@@ -252,8 +253,20 @@ footer img{height:40px}
     btn.style.display = 'none';
     if (!vistoVC) { vistoVC = true; ev('ViewContent', { content_name: 'VSL Hijos Prosperos' }, true); ev('VSL_sonido'); }
   }
-  btn.addEventListener('click', function(e){ e.stopPropagation(); activar(); });
-  caja.addEventListener('click', function(){ if (!conSonido || v.muted) activar(); });
+  // 7-nov-2026: un solo video con sonido a la vez. Si se activa el video de las apps, el principal se pausa
+  // y muestra «Seguir viendo»; al tocarlo, sigue donde iba y el de las apps se pausa.
+  window.HP_pausarVSL = function(){
+    if (!conSonido) { try { v.pause(); } catch(e){} return; }
+    window.HP_VSL_PAUSA = true; try { v.pause(); } catch(e){}
+    btn.querySelector('b').textContent = 'Seguir viendo'; btn.style.display = 'flex';
+  };
+  function reanudar(){
+    window.HP_VSL_PAUSA = false; btn.style.display = 'none';
+    try { if (window.HP_pausarApps) window.HP_pausarApps(); } catch(e){}
+    var p = v.play(); if (p && p.catch) p.catch(respaldo);
+  }
+  btn.addEventListener('click', function(e){ e.stopPropagation(); if (window.HP_VSL_PAUSA) reanudar(); else { try { if (window.HP_pausarApps) window.HP_pausarApps(); } catch(e){} activar(); } });
+  caja.addEventListener('click', function(){ if (window.HP_VSL_PAUSA) reanudar(); else if (!conSonido || v.muted) { try { if (window.HP_pausarApps) window.HP_pausarApps(); } catch(e){} activar(); } });
 
 
   // Video de las apps: arranca en silencio cuando se ve; al tocar, vuelve a empezar con sonido.
@@ -262,13 +275,14 @@ footer img{height:40px}
     if (!av) return;
     var visto = false, sonido = false, h = {};
     try { new IntersectionObserver(function(es){ es.forEach(function(e){
-      if (e.isIntersecting) { if (!visto) { visto = true; ev('APPS_visto'); } var p = av.play(); if (p && p.catch) p.catch(function(){}); }
+      if (e.isIntersecting) { if (!visto) { visto = true; ev('APPS_visto'); } if (!sonido) { var p = av.play(); if (p && p.catch) p.catch(function(){}); } }
       else if (!av.paused) av.pause();
     }); }, { threshold: 0.5 }).observe(cel); } catch(e) {}
     av.addEventListener('timeupdate', function(){ if (!av.duration) return; var pct = av.currentTime / av.duration * 100; [50,95].forEach(function(x){ if (pct >= x && !h[x]) { h[x] = 1; ev('APPS_' + x + (sonido ? '' : '_mudo')); } }); });
     function conSonido(){
-      if (sonido && !av.muted) { if (av.paused) av.play(); else av.pause(); return; }
+      if (sonido && !av.muted) { if (av.paused) { try { if (window.HP_pausarVSL) window.HP_pausarVSL(); } catch(e) {} av.play(); } else av.pause(); return; }
       sonido = true;
+      try { if (window.HP_pausarVSL) window.HP_pausarVSL(); } catch(e) {}
       var n = document.createElement('video');
       n.id = 'apps-v'; n.setAttribute('playsinline', ''); n.setAttribute('webkit-playsinline', ''); n.playsInline = true;
       n.setAttribute('disablepictureinpicture', ''); n.setAttribute('controlslist', 'nodownload nofullscreen noplaybackrate');
@@ -279,6 +293,7 @@ footer img{height:40px}
       var p = n.play(); if (p && p.catch) p.catch(function(){ n.setAttribute('controls', ''); n.style.pointerEvents = 'auto'; });
       ev('APPS_sonido');
     }
+    window.HP_pausarApps = function(){ try { av.pause(); } catch(e) {} };
     son.addEventListener('click', function(e){ e.stopPropagation(); conSonido(); });
     cel.addEventListener('click', conSonido);
   })();
