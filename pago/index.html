@@ -50,6 +50,7 @@ h2{font-size:18px;margin:0 0 10px;font-weight:800;color:var(--navy)}
 .k{font-size:12.5px;color:var(--muted)}
 .v{font-weight:700;font-size:15px;word-break:break-all}
 .copy{flex:0 0 auto;border:1px solid var(--blue);color:var(--blue);background:#fff;border-radius:10px;padding:7px 11px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit}
+.row:has(.copy){cursor:pointer}
 .copy.done{background:var(--ok);border-color:var(--ok);color:#fff}
 .note{font-size:13px;color:var(--muted);margin-top:6px}
 .btn{display:block;width:100%;text-align:center;border:0;border-radius:12px;padding:14px;font-weight:800;font-size:16px;cursor:pointer;text-decoration:none;font-family:inherit}
@@ -294,9 +295,11 @@ box.addEventListener('click', function(e){
     if(!ab){ mt.classList.add('abierto'); ev('AbrioMetodo',{metodo:mt.getAttribute('data-id')}) }
     return; }
   var c = e.target.closest('.copy'), p = e.target.closest('.js-paid'), hm = e.target.closest('.js-hot');
+  // 7-nov-2026: tocar cualquier parte de la fila (el número, la cuenta, el monto) también copia el dato
+  if(!c){ var fila = e.target.closest('.row'); if(fila) c = fila.querySelector('.copy'); }
   if(c){ ev('CopioDato',{metodo:c.getAttribute('data-m')});
     var t = c.getAttribute('data-c');
-    var done = function(){c.textContent='Copiado';c.classList.add('done');setTimeout(function(){c.textContent='Copiar';c.classList.remove('done')},1600)};
+    var done = function(){c.textContent='✓ Copiado';c.classList.add('done');setTimeout(function(){c.textContent='Copiar';c.classList.remove('done')},1600)};
     if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(done,function(){fallback(t);done()})}else{fallback(t);done()}
     addPayment(c.getAttribute('data-m'));
   }
