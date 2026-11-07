@@ -93,6 +93,7 @@ body.s3 .method:not(.abierto){display:none}
 body.s3 #pais{display:none}
 .volver{display:block;margin:4px auto 0;background:none;border:0;color:var(--blue);font:inherit;font-weight:700;font-size:15px;cursor:pointer;padding:8px}
 .oc{display:none}
+.method .tag{display:none}
 </style>
 </head>
 <body>
@@ -100,7 +101,7 @@ body.s3 #pais{display:none}
   <div class="wrap">
     <img class="logo" src="../logo-hp.png" alt="Hijos Prósperos" style="background:#fff;border-radius:14px;padding:6px 12px;height:58px">
     <h1>Hijos Prósperos · Educación financiera para tus hijos</h1>
-    <p class="sub">3 pasos cortos. Te guiamos en cada uno.</p>
+    <p class="sub">2 pasos cortos. Te guiamos en cada uno.</p>
     <div class="price">
       <div class="usd"><span id="precioTop">$37</span> <small>USD · pago único</small></div>
       <div class="bs" id="bsLine"></div>
@@ -122,7 +123,7 @@ body.s3 #pais{display:none}
 
   <div id="open">
   <div class="prog"><div id="barra"></div></div>
-  <div class="ptxt" id="ptxt">Paso 1 de 3 · ¿Desde dónde pagas?</div>
+  <div class="ptxt" id="ptxt">Paso 1 de 2 · Elige cómo vas a pagar</div>
   <section id="metodos">
     <div class="pais grande" id="pais"><span>¿Desde dónde pagas?</span><button type="button" data-p="ve">🇻🇪 Venezuela</button><button type="button" data-p="otro">🌎 Otro país</button></div>
     <div id="methods"></div>
@@ -288,9 +289,11 @@ function fallback(t){var a=document.createElement('textarea');a.value=t;a.style.
 
 /* V4: por pasos (país → método → datos y "Ya pagué") */
 (function(){
-  var b=document.body; function paso(n,t){b.classList.remove('s1','s2','s3');b.classList.add('s'+n);$('#barra').style.width=(n*33.4)+'%';$('#ptxt').textContent='Paso '+n+' de 3 · '+t;ev('Paso'+n)}
+  var b=document.body; function paso(n,t){b.classList.remove('s1','s2','s3');b.classList.add('s'+n);$('#barra').style.width=((n-1)*50)+'%';$('#ptxt').textContent='Paso '+(n-1)+' de 2 · '+t;ev('Paso'+n)}
   box.querySelectorAll('.method').forEach(function(x){x.classList.remove('abierto')});
-  paso(1,'¿Desde dónde pagas?');
+  paso(1,'');
+  $('#pais').style.display='none';
+  setTimeout(function(){ $('#pais').querySelector('button[data-p=ve]').click(); },0);
   $('#pais').addEventListener('click',function(e){ if(!e.target.closest('button'))return;
     setTimeout(function(){box.querySelectorAll('.method').forEach(function(x){x.classList.remove('abierto')});paso(2,'Elige cómo vas a pagar');},0)});
   box.addEventListener('click',function(e){ if(!e.target.closest('.mhead'))return;

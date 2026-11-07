@@ -207,11 +207,23 @@ footer img{height:40px}
   });
   v.addEventListener('ended', function(){ mostrarOferta('video'); });
 
+  function esVenezuela(){
+    var p = (q.get('pais') || '').toLowerCase(); if (p) return p === 've';
+    if (/(^|[-_|])ve($|[-_|])|venezuela/i.test((q.get('utm_campaign')||'') + '|' + (q.get('utm_content')||''))) return true;
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone === 'America/Caracas'; } catch(e) { return false; }
+  }
   // Botón de compra
   document.querySelectorAll('.js-comprar').forEach(function(a){
     a.addEventListener('click', function(e){
       ev('InitiateCheckout', { value: 37, currency: 'USD', content_name: 'Hijos Prosperos · educacion financiera' }, true);
       try { clarity('event', 'clic_comprar_' + a.dataset.ubicacion); } catch(x){}
+      // Venezuela → página con los métodos de pago de Venezuela; resto de países → Hotmart
+      if (esVenezuela()) {
+        e.preventDefault();
+        var pq = new URLSearchParams(location.search); pq.set('src', [q.get('utm_source'), q.get('utm_campaign'), q.get('utm_content')].filter(Boolean).join('|') || 'landing');
+        location.href = 'pago/?' + pq.toString();
+        return;
+      }
       if (window.CHECKOUT_URL) {
         e.preventDefault();
         var u = new URL(window.CHECKOUT_URL);
