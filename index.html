@@ -120,6 +120,7 @@ footer img{height:40px}
     <div class="oferta on" id="oferta">
       <p style="margin:0;font-weight:900;font-size:clamp(34px,6vw,48px);line-height:1">US$37 <span style="font-size:16px;font-weight:700;color:#4A4380">pago único</span></p>
       <a href="#comprar" class="cta js-comprar" data-ubicacion="debajo_video">Quiero que mi hijo empiece hoy</a>
+      <span class="nota moneda">🔒 Pago seguro con Hotmart. Verás el precio en la moneda de tu país (equivale a US$37).</span>
       <span class="nota">Acceso de por vida para 1 hijo · precio de lanzamiento</span>
     </div>
   </section>
@@ -183,6 +184,7 @@ footer img{height:40px}
     <p style="margin:0 0 4px;font-weight:700">Acceso para 1 hijo · un solo pago · de por vida · precio de lanzamiento</p>
     <p style="margin:0 0 26px;font-weight:600">¿Tienes más de un hijo? <a href="https://wa.me/573105104847?text=Hola%2C%20tengo%20m%C3%A1s%20de%20un%20hijo%20y%20quiero%20Hijos%20Pr%C3%B3speros" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Escríbenos por WhatsApp</a></p>
     <a href="#comprar" class="cta js-comprar" data-ubicacion="final">Quiero que mi hijo empiece hoy</a>
+    <p class="moneda" style="margin:16px 0 0;font-size:14px;font-weight:600;opacity:.9">🔒 Pago seguro con Hotmart. Verás el precio en la moneda de tu país (equivale a US$37).</p>
   </div>
 </section>
 
@@ -306,6 +308,8 @@ footer img{height:40px}
     if (/(^|[-_|])ve($|[-_|])|venezuela/i.test((q.get('utm_campaign')||'') + '|' + (q.get('utm_content')||''))) return true;
     try { return Intl.DateTimeFormat().resolvedOptions().timeZone === 'America/Caracas'; } catch(e) { return false; }
   }
+  // 7-nov-2026: aviso de moneda local de Hotmart; en Venezuela no aplica (su página de pago muestra US$ y Bs)
+  if (esVenezuela()) document.querySelectorAll('.moneda').forEach(function(x){ x.style.display = 'none'; });
   // Botón de compra
   document.querySelectorAll('.js-comprar').forEach(function(a){
     a.addEventListener('click', function(e){
