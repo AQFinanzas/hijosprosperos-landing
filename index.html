@@ -12,7 +12,12 @@
 <meta name="theme-color" content="#170B5B">
 <link rel="icon" href="logo-hp.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="poster.jpg" fetchpriority="high">
+<!-- 7-nov-2026: la fuente ya no frena la primera pantalla (se muestra con la del sistema y cambia al cargar) -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
 
 <!-- Configuración -->
 <script>
@@ -90,7 +95,7 @@ footer img{height:40px}
 <body>
 <div class="wrap">
   <header>
-    <img src="logo-hp.png" alt="Hijos Prósperos">
+    <img src="logo-hp.png" alt="Hijos Prósperos" width="78" height="52" fetchpriority="high">
     <span class="chip">Para mamás y papás de hijos de 8 a 17 años</span>
   </header>
 
@@ -99,7 +104,7 @@ footer img{height:40px}
     <h1>Tu hijo va a aprender de dinero, sí o sí. <span>Que lo aprenda de ti.</span></h1>
     <p class="sub">A nosotros nadie nos enseñó. Mira cómo darle a tu hijo, desde la casa, la educación financiera que nos faltó.</p>
     <div class="video">
-      <video id="vsl" src="vsl.mp4" poster="poster.jpg" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
+      <video id="vsl" src="vsl.mp4" poster="poster.jpg" muted playsinline webkit-playsinline preload="metadata" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
       <button class="sonido" id="sonido" aria-label="Activar el sonido del video">
         <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>
         <b>Toca para escuchar</b><span>con sonido</span>
@@ -132,7 +137,7 @@ footer img{height:40px}
       <div class="lista" id="lista"></div>
     </div>
     <div style="text-align:center">
-      <img src="bruno-celebra.png" alt="Bruno, la mascota de Hijos Prósperos, celebrando" style="width:min(320px,80%)">
+      <img loading="lazy" decoding="async" src="bruno-celebra.png" alt="Bruno, la mascota de Hijos Prósperos, celebrando" style="width:min(320px,80%)">
       <p style="margin:6px 0 0;font-weight:800;font-size:18px;color:#2D8EBB">Con Bruno, aprender de dinero es un juego</p>
     </div>
   </div>
@@ -140,7 +145,7 @@ footer img{height:40px}
 
 <section class="yo">
   <div class="wrap dos">
-    <div style="flex:0 1 340px;text-align:center"><img class="foto" src="alejandro.jpg" alt="Alejandro Quiñones"></div>
+    <div style="flex:0 1 340px;text-align:center"><img loading="lazy" decoding="async" class="foto" src="alejandro.jpg" alt="Alejandro Quiñones"></div>
     <div>
       <p class="kick" style="color:#2D8EBB">QUIÉN TE ACOMPAÑA</p>
       <h2>Soy Alejandro Quiñones</h2>
@@ -153,7 +158,7 @@ footer img{height:40px}
 
 <section class="final on" id="comprar">
   <div class="wrap">
-    <img src="bruno-guino.png" alt="" style="width:140px">
+    <img loading="lazy" decoding="async" src="bruno-guino.png" alt="" style="width:140px">
     <h2 style="margin:8px auto 10px;max-width:760px">Dale a tu hijo la educación financiera que a nosotros nos faltó</h2>
     <p class="precio">US$37</p>
     <p style="margin:0 0 4px;font-weight:700">Acceso para 1 hijo · un solo pago · de por vida · precio de lanzamiento</p>
@@ -163,7 +168,7 @@ footer img{height:40px}
 </section>
 
 <footer>
-  <img src="logo-hp.png" alt="Hijos Prósperos">
+  <img loading="lazy" decoding="async" src="logo-hp.png" alt="Hijos Prósperos">
   <p style="margin:10px 0 0">Hijos Prósperos es una marca de <a href="https://aqfinanzas.com" target="_blank" rel="noopener">AQ Finanzas</a> · <a href="https://aqfinanzas.com/privacidad.html" target="_blank" rel="noopener">Privacidad</a></p>
   <p style="margin:6px 0 0;font-size:13px">Contenido educativo. No es asesoría financiera.</p>
 </footer>
