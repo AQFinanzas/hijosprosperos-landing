@@ -191,18 +191,31 @@ footer img{height:40px}
   // Arranca solo (en silencio, como permiten los navegadores) 1,5 s después de entrar
   setTimeout(function(){ v.muted = true; var p = v.play(); if (p && p.catch) p.catch(function(){}); }, 1500);
 
-  btn.addEventListener('click', function(){
-    conSonido = true; v.currentTime = 0; v.muted = false;
-    var p = v.play(); if (p && p.catch) p.catch(function(){});
+  // Activar el sonido: robusto en iPhone y Android. Si el navegador no lo deja, se muestran los controles del video.
+  var vistoVC = false, caja = v.parentNode;
+  function respaldo(){ v.setAttribute('controls',''); v.style.pointerEvents = 'auto'; btn.style.display = 'none'; ev('VSL_respaldo_controles'); }
+  function revisar(){ if (v.muted || v.paused) respaldo(); }
+  function activar(){
+    conSonido = true;
+    v.muted = false; v.defaultMuted = false; v.removeAttribute('muted'); v.volume = 1;
+    try { v.currentTime = 0; } catch(e){}
+    var p = v.play();
+    if (p && p.then) p.then(function(){ setTimeout(revisar, 400); }).catch(respaldo); else setTimeout(revisar, 600);
     btn.style.display = 'none';
-    ev('ViewContent', { content_name: 'VSL Hijos Prosperos' }, true);
-  });
+    if (!vistoVC) { vistoVC = true; ev('ViewContent', { content_name: 'VSL Hijos Prosperos' }, true); ev('VSL_sonido'); }
+  }
+  btn.addEventListener('click', function(e){ e.stopPropagation(); activar(); });
+  caja.addEventListener('click', function(){ if (!conSonido || v.muted) activar(); });
   // Sin pausa: si algo lo detiene, sigue
   v.addEventListener('pause', function(){ if (conSonido && !v.ended) { setTimeout(function(){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }, 50); } });
   v.addEventListener('timeupdate', function(){
     if (!conSonido || !v.duration) return;
     var pct = v.currentTime / v.duration * 100;
     [25,50,75,95].forEach(function(h){ if (pct >= h && !hitos[h]) { hitos[h] = 1; ev('VSL_' + h); } });
+    // Clarity: dónde se van (cada 10 % y cada 15 s); la etiqueta vsl_seg queda con el último tramo visto de cada visita
+    var d = Math.floor(pct / 10) * 10; if (d > 0 && !hitos['c' + d]) { hitos['c' + d] = 1; try { clarity('event', 'VSL_c' + d); } catch(e){} }
+    var tramo = Math.floor(v.currentTime / 15) * 15;
+    if (tramo !== hitos.tramo) { hitos.tramo = tramo; try { clarity('set', 'vsl_seg', String(tramo)); } catch(e){} }
     if (v.currentTime >= window.SEG_OFERTA) mostrarOferta('video');
   });
   v.addEventListener('ended', function(){ mostrarOferta('video'); });
