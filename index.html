@@ -75,6 +75,7 @@ h1 span,h2 span{color:#ED480F}
 .apps .son{position:absolute;top:10px;right:10px;border:0;border-radius:999px;background:rgba(237,72,15,.96);color:#fff;font:900 14px Montserrat,system-ui,sans-serif;display:flex;align-items:center;gap:6px;padding:8px 13px 8px 10px;box-shadow:0 6px 18px rgba(23,11,91,.35);animation:pulso 1.6s ease-in-out infinite;transform-origin:top right;cursor:pointer}
 .apps .son svg{width:20px;height:20px}
 @media (max-width:600px){.apps .cel{width:min(240px,62vw);border-radius:22px}.apps .son{top:7px;right:7px;font-size:12px;padding:6px 10px 6px 8px}.apps .son svg{width:16px;height:16px}}
+.cuenta{position:sticky;top:0;z-index:50;background:#170B5B;color:#fff;text-align:center;padding:8px 10px;font-weight:700;font-size:14px;line-height:1.3}.cuenta b{color:#FFB08A}.cuenta .reloj{display:inline-block;margin-left:6px;background:#ED480F;color:#fff;border-radius:8px;padding:2px 8px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:.5px}.antes{font-size:.45em;font-weight:800;color:#8A84B5;text-decoration:line-through;margin-right:8px;vertical-align:middle}
 .garantia{display:inline-flex;align-items:center;gap:10px;background:#E8F7EE;border:2px solid #1BA35B;color:#0E6B39;border-radius:16px;padding:10px 16px;font-weight:800;font-size:15px;line-height:1.35;text-align:left;max-width:460px}
 .mini{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:4px}.garantia.g2{display:inline-flex;gap:6px;padding:5px 12px;border-width:1.5px;border-radius:999px;font-size:13px;font-weight:800;max-width:none}.nota.n2{font-size:13px}.dudas.d2{font-size:13px;border-bottom-width:1.5px;gap:6px}
 .garantia b{font-weight:900}.garantia svg{flex:none}
@@ -111,6 +112,8 @@ footer img{height:40px}
 </style>
 </head>
 <body>
+<!-- 7-nov-2026: contador de 48 h por visitante (se guarda en el navegador) -->
+<div class="cuenta" id="cuenta">🔥 Precio de lanzamiento <b>US$37</b> <s style="opacity:.7">US$97</s> · termina en <span class="reloj" id="reloj">48:00:00</span></div>
 <a class="wa-globo" href="https://wa.me/573105104847?text=Hola%2C%20tengo%20una%20duda%20antes%20de%20comprar%20Hijos%20Pr%C3%B3speros" target="_blank" rel="noopener" data-dudas="1" aria-label="Escríbeme por WhatsApp"><svg viewBox="0 0 32 32" fill="#fff" aria-hidden="true"><path d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5.1 2.2.9 3 1 4.1.8.7-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.1-.3-.2-.6-.3z"/></svg></a>
 <div class="wrap">
   <header>
@@ -131,7 +134,7 @@ footer img{height:40px}
       <div class="vbar" aria-hidden="true"><i id="vbar"></i></div>
     </div>
     <div class="oferta on" id="oferta">
-      <p style="margin:0;font-weight:900;font-size:clamp(34px,6vw,48px);line-height:1">US$37 <span style="font-size:16px;font-weight:700;color:#4A4380">pago único</span></p>
+      <p style="margin:0;font-weight:900;font-size:clamp(34px,6vw,48px);line-height:1"><span class="antes">US$97</span>US$37 <span style="font-size:16px;font-weight:700;color:#4A4380">pago único</span></p>
       <a href="#comprar" class="cta js-comprar" data-ubicacion="debajo_video">Quiero que mi hijo empiece hoy</a>
       <div class="mini">
         <span class="garantia hotmart g2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1BA35B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Garantía de 7 días o te devolvemos tu dinero</span>
@@ -202,7 +205,7 @@ footer img{height:40px}
   <div class="wrap">
     <img loading="lazy" decoding="async" src="bruno-guino.png" alt="" style="width:140px">
     <h2 style="margin:8px auto 10px;max-width:760px">Dale a tu hijo la educación financiera que a nosotros nos faltó</h2>
-    <p class="precio">US$37</p>
+    <p class="precio"><span class="antes">US$97</span>US$37</p>
     <p style="margin:0 0 4px;font-weight:700">Acceso para 1 hijo · un solo pago · de por vida · precio de lanzamiento</p>
     <p style="margin:0 0 26px;font-weight:600">¿Tienes más de un hijo? <a href="https://wa.me/573105104847?text=Hola%2C%20tengo%20m%C3%A1s%20de%20un%20hijo%20y%20quiero%20Hijos%20Pr%C3%B3speros" target="_blank" rel="noopener" style="color:#fff;text-decoration:underline">Escríbenos por WhatsApp</a></p>
     <a href="#comprar" class="cta js-comprar" data-ubicacion="final">Quiero que mi hijo empiece hoy</a>
@@ -368,6 +371,21 @@ footer img{height:40px}
     var v = document.getElementById('vsl'); if (!v || !v.duration) return;
     var p = Math.min(1, v.currentTime / v.duration); b.style.width = f(p).toFixed(2) + '%';
   }, 250);
+})();
+</script>
+<script>
+(function(){
+  var r = document.getElementById('reloj'); if (!r) return;
+  var K = 'hp_fin_oferta', fin = 0;
+  try { fin = parseInt(localStorage.getItem(K) || '0', 10); } catch(e){}
+  if (!fin) { fin = Date.now() + 48*3600*1000; try { localStorage.setItem(K, String(fin)); } catch(e){} }
+  function d(n){ return (n < 10 ? '0' : '') + n; }
+  function tic(){
+    var t = Math.max(0, fin - Date.now()), s = Math.floor(t/1000);
+    r.textContent = d(Math.floor(s/3600)) + ':' + d(Math.floor(s/60)%60) + ':' + d(s%60);
+    if (!t) { document.getElementById('cuenta').innerHTML = '⏰ Última oportunidad: precio de lanzamiento <b>US$37</b> <s style="opacity:.7">US$97</s>'; clearInterval(iv); }
+  }
+  var iv = setInterval(tic, 1000); tic();
 })();
 </script>
 </body>
