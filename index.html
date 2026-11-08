@@ -13,7 +13,7 @@
 <link rel="icon" href="logo-hp.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="poster.jpg" fetchpriority="high">
+<link rel="preload" as="image" href="poster.webp" fetchpriority="high">
 <!-- 7-nov-2026: la fuente ya no frena la primera pantalla (se muestra con la del sistema y cambia al cargar) -->
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -37,7 +37,7 @@ fbq('track', 'PageView');
 
 <!-- Microsoft Clarity -->
 <script>
-(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script",window.CLARITY_ID);
+(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};var go=function(){t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);};if(l.readyState==="complete")setTimeout(go,800);else c.addEventListener("load",function(){setTimeout(go,800)});})(window,document,"clarity","script",window.CLARITY_ID);
 clarity('set','pagina','hijosprosperos');
 </script>
 
@@ -126,7 +126,7 @@ footer img{height:40px}
     <h1>Tu hij@ va a aprender de dinero, sí o sí. <span>Que lo aprenda bien.</span></h1>
     <p class="sub">Con <b>la primera app de educación financiera para niñ@s y jóvenes en América Latina</b>, hecha por expertos. A nosotros nadie nos enseñó; dale a tu hij@, desde la casa, lo que nos faltó.</p>
     <div class="video">
-      <video id="vsl" src="vsl3.mp4" poster="poster.jpg" muted playsinline webkit-playsinline preload="metadata" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
+      <video id="vsl" src="vsl3.mp4" poster="poster.webp" muted playsinline webkit-playsinline preload="metadata" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
       <button class="sonido" id="sonido" aria-label="Activar el sonido del video">
         <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>
         <b>Toca para escuchar</b><span>con sonido</span>
@@ -150,7 +150,7 @@ footer img{height:40px}
     <h2>Así son las <span>apps de tus hijos</span></h2>
     <p class="s">Una para niños de 8 a 12 años y otra para jóvenes de 13 a 17. Míralas por dentro en 40 segundos.</p>
     <div class="cel" id="apps-cel">
-      <video id="apps-v" src="apps.mp4" poster="apps.jpg" muted playsinline webkit-playsinline preload="none" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
+      <video id="apps-v" src="apps.mp4" poster="apps.webp" muted playsinline webkit-playsinline preload="none" disablepictureinpicture controlslist="nodownload nofullscreen noplaybackrate"></video>
       <button class="son" id="apps-son" aria-label="Activar el sonido del video de las apps"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Toca para escuchar</button>
     </div>
     <div style="margin-top:26px;display:flex;flex-direction:column;align-items:center;gap:10px">
@@ -190,7 +190,7 @@ footer img{height:40px}
 
 <section class="yo">
   <div class="wrap dos">
-    <div style="flex:0 1 340px;text-align:center"><img loading="lazy" decoding="async" class="foto" src="alejandro.jpg" alt="Alejandro Quiñones"></div>
+    <div style="flex:0 1 340px;text-align:center"><img loading="lazy" decoding="async" class="foto" src="alejandro.webp" alt="Alejandro Quiñones"></div>
     <div>
       <p class="kick" style="color:#2D8EBB">QUIÉN TE ACOMPAÑA</p>
       <h2>Soy Alejandro Quiñones</h2>
