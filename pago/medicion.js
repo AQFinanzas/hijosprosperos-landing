@@ -4,7 +4,7 @@
   var V = document.documentElement.getAttribute('data-variante') || 'v1';
   var q = new URLSearchParams(location.search);
   var P197 = false;
-  window.PAGO = { variante: V, p197: P197, precio: 37,
+  window.PAGO = { variante: V, p197: P197, precio: 27,
     src: (q.get('src') || '').replace(/[^a-z0-9_-]/gi, '').slice(0, 30) };
 
   /* Un eventID por evento: Meta recibe cada evento por el navegador y por su servidor automático;
@@ -17,7 +17,7 @@
   };
 
   fbq('track', 'PageView', {}, { eventID: nid() });
-  ev('VioPagoHP', { value: 37, currency: 'USD' });
+  ev('VioPagoHP', { value: 27, currency: 'USD' });
   ev('VioPago_' + V);
 
   /* Clarity: mapas de calor y grabaciones, etiquetados por variante */
